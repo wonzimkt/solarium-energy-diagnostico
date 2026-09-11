@@ -53,7 +53,9 @@ export default function PanelDashboard() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
           <div>
             <h1 className="font-display text-2xl font-semibold text-white">Leads recebidos</h1>
-            <p className="text-slate-400 text-sm mt-1">{leads.length} leads no total</p>
+            <p className="text-slate-400 text-sm mt-1">
+              {leads.length} {leads.length === 1 ? 'lead' : 'leads'} no total
+            </p>
           </div>
           <div className="flex gap-2">
             <button
