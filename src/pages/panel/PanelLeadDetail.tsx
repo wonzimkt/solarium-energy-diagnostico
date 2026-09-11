@@ -60,9 +60,9 @@ export default function PanelLeadDetail() {
             <section className="mt-8 rounded-xl border border-white/10 bg-ink-900 p-6">
               <h2 className="font-display font-semibold text-white mb-4">Dados de contato</h2>
               <div className="grid sm:grid-cols-2 gap-5">
-                <Field label="Nome" value={lead.nome} />
+                <Field label="Nome" value={lead.nome || '—'} />
                 <Field label="Cargo" value={lead.cargo ?? '—'} />
-                <Field label="E-mail" value={lead.email} />
+                <Field label="E-mail" value={lead.email || '—'} />
                 <Field label="WhatsApp" value={lead.whatsapp} />
               </div>
             </section>

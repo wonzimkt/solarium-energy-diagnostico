@@ -58,8 +58,8 @@ export default function StepConsumo({
 
   return (
     <FormShell
-      step={3}
-      total={3}
+      step={4}
+      total={4}
       title="Dados de consumo de energia"
       subtitle="Essas informações estão na sua última fatura da CELESC."
       onBack={onBack}

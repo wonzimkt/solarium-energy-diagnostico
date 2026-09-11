@@ -1,13 +1,13 @@
 import { useState } from 'react'
 import Hero from '../components/Hero'
 import HowItWorks from '../components/HowItWorks'
+import LeadCapture from '../components/form/LeadCapture'
 import Qualification from '../components/form/Qualification'
 import NotIndustry from '../components/form/NotIndustry'
 import StepSegmentoCidade from '../components/form/StepSegmentoCidade'
 import StepRegime from '../components/form/StepRegime'
 import StepConsumo from '../components/form/StepConsumo'
 import LoadingCalculating from '../components/form/LoadingCalculating'
-import ContactCapture from '../components/form/ContactCapture'
 import ResultDashboard from '../components/ResultDashboard'
 import InstitutionalSection from '../components/InstitutionalSection'
 import Footer from '../components/Footer'
@@ -18,17 +18,20 @@ import type { Regiao, Regime } from '../lib/constants'
 
 type Estagio =
   | 'hero'
+  | 'lead_capture'
   | 'qualificacao'
   | 'nao_industria'
   | 'segmento_cidade'
   | 'regime'
   | 'consumo'
   | 'calculando'
-  | 'contato'
   | 'resultado'
 
 export default function Landing() {
   const [estagio, setEstagio] = useState<Estagio>('hero')
+
+  const [empresa, setEmpresa] = useState('')
+  const [whatsapp, setWhatsapp] = useState('')
 
   const [segmento, setSegmento] = useState('')
   const [cidade, setCidade] = useState('')
@@ -40,11 +43,25 @@ export default function Landing() {
 
   const [resultado, setResultado] = useState<DiagnosticoResultado | null>(null)
   const [dadosFinal, setDadosFinal] = useState<FormularioDados | null>(null)
-  const [enviando, setEnviando] = useState(false)
-  const [erroEnvio, setErroEnvio] = useState<string | null>(null)
 
-  function calcularEIrParaContato() {
+  async function calcularESalvar() {
     if (!regime || consumoMedioKwh === null || valorMedioConta === null) return
+
+    const dados: FormularioDados = {
+      empresa,
+      whatsapp,
+      nome: '',
+      email: '',
+      cargo: '',
+      segmento,
+      cidade,
+      regiao,
+      regime,
+      consumoMedioKwh,
+      valorMedioConta,
+      areaDisponivelM2,
+    }
+
     const r = calcularDiagnostico({
       consumoMedioKwh,
       valorMedioConta,
@@ -53,48 +70,22 @@ export default function Landing() {
       areaDisponivelM2,
     })
     setResultado(r)
-    setEstagio('calculando')
-  }
-
-  async function handleContactSubmit(contato: {
-    nome: string
-    email: string
-    whatsapp: string
-    empresa: string
-    cargo: string
-  }) {
-    if (!regime || consumoMedioKwh === null || valorMedioConta === null) return
-    setEnviando(true)
-    setErroEnvio(null)
-
-    const dados: FormularioDados = {
-      segmento,
-      cidade,
-      regiao,
-      regime,
-      consumoMedioKwh,
-      valorMedioConta,
-      areaDisponivelM2,
-      ...contato,
-    }
+    setDadosFinal(dados)
 
     try {
-      const r = await salvarLead(dados)
-      setResultado(r)
-      setDadosFinal(dados)
-      setEstagio('resultado')
-    } catch (e) {
-      setErroEnvio('Não foi possível enviar seus dados agora. Tente novamente em instantes.')
-    } finally {
-      setEnviando(false)
+      await salvarLead(dados)
+    } catch {
+      // segue exibindo o diagnóstico mesmo se a gravação do lead falhar
     }
+
+    setEstagio('resultado')
   }
 
   return (
     <div className="min-h-screen flex flex-col">
       {estagio === 'hero' && (
         <>
-          <Hero onStart={() => setEstagio('qualificacao')} />
+          <Hero onStart={() => setEstagio('lead_capture')} />
           <HowItWorks />
           <InstitutionalSection />
           <Footer />
@@ -103,6 +94,18 @@ export default function Landing() {
 
       {estagio !== 'hero' && (
         <main className="flex-1 px-6 py-16 sm:py-24">
+          {estagio === 'lead_capture' && (
+            <LeadCapture
+              empresa={empresa}
+              whatsapp={whatsapp}
+              onNext={(emp, tel) => {
+                setEmpresa(emp)
+                setWhatsapp(tel)
+                setEstagio('qualificacao')
+              }}
+            />
+          )}
+
           {estagio === 'qualificacao' && (
             <Qualification
               onYes={() => setEstagio('segmento_cidade')}
@@ -149,22 +152,13 @@ export default function Landing() {
                 setConsumoMedioKwh(c)
                 setValorMedioConta(v)
                 setAreaDisponivelM2(a)
-                calcularEIrParaContato()
+                setEstagio('calculando')
               }}
             />
           )}
 
           {estagio === 'calculando' && (
-            <LoadingCalculating onDone={() => setEstagio('contato')} />
-          )}
-
-          {estagio === 'contato' && resultado && (
-            <ContactCapture
-              economiaMensalPreview={resultado.economiaMensal}
-              onSubmit={handleContactSubmit}
-              submitting={enviando}
-              erroSubmit={erroEnvio}
-            />
+            <LoadingCalculating onDone={calcularESalvar} />
           )}
 
           {estagio === 'resultado' && resultado && dadosFinal && (

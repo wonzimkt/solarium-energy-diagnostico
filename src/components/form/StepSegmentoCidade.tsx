@@ -28,8 +28,8 @@ export default function StepSegmentoCidade({
 
   return (
     <FormShell
-      step={1}
-      total={3}
+      step={2}
+      total={4}
       title="Um pouco sobre sua indústria"
       subtitle="Usamos isso para aplicar a produtividade solar da sua região."
       onBack={onBack}

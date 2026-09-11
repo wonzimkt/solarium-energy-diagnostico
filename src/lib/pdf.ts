@@ -30,7 +30,7 @@ export function gerarPdfDiagnostico(dados: FormularioDados, r: DiagnosticoResult
   y += 7
   doc.setFontSize(10)
   doc.setTextColor(90, 90, 90)
-  doc.text(`Contato: ${dados.nome} · ${dados.email} · ${dados.whatsapp}`, 14, y)
+  doc.text(`Contato: ${dados.whatsapp}`, 14, y)
   y += 6
   doc.text(
     `Segmento: ${dados.segmento} · Cidade: ${dados.cidade} · Regime: ${REGIME_LABEL[dados.regime]}`,

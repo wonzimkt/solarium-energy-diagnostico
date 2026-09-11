@@ -97,10 +97,11 @@ export default function PanelDashboard() {
             >
               <div>
                 <p className="font-semibold text-white">
-                  {lead.empresa} <span className="text-slate-500 font-normal">· {lead.nome}</span>
+                  {lead.empresa}
+                  {lead.nome && <span className="text-slate-500 font-normal"> · {lead.nome}</span>}
                 </p>
                 <p className="text-sm text-slate-400 mt-0.5">
-                  {lead.segmento} · {lead.cidade} ·{' '}
+                  {lead.whatsapp} · {lead.segmento} · {lead.cidade} ·{' '}
                   {new Date(lead.created_at).toLocaleDateString('pt-BR')}
                 </p>
               </div>

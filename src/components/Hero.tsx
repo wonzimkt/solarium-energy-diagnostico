@@ -16,8 +16,8 @@ export default function Hero({ onStart }: { onStart: () => void }) {
           </p>
 
           <h1 className="font-display text-4xl sm:text-6xl font-semibold leading-[1.05] tracking-tight text-white">
-            Sua indústria está pagando a{' '}
-            <span className="text-solar-400">conta de luz mais cara</span> do que devia.
+            Você está <span className="text-solar-400">perdendo dinheiro</span> por pagar caro
+            demais na conta de energia da sua indústria.
           </h1>
 
           <p className="mt-6 text-lg text-slate-300 max-w-xl">

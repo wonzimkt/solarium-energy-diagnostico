@@ -30,8 +30,8 @@ export default function StepRegime({
 
   return (
     <FormShell
-      step={2}
-      total={3}
+      step={3}
+      total={4}
       title="Qual o regime de operação da sua planta?"
       subtitle="Indústrias que operam mais horas aproveitam mais a energia solar gerada durante o dia."
       onBack={onBack}

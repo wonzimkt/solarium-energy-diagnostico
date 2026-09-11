@@ -16,7 +16,7 @@ export default function ResultDashboard({
   const [metodologiaAberta, setMetodologiaAberta] = useState(false)
 
   const mensagemWhatsapp = encodeURIComponent(
-    `Olá! Sou ${dados.nome}, da ${dados.empresa}. Fiz o diagnóstico da Solarium Energy e minha economia estimada é de ${formatarMoeda(
+    `Olá! Sou da ${dados.empresa}. Fiz o diagnóstico da Solarium Energy e minha economia estimada é de ${formatarMoeda(
       r.economiaMensal,
     )}/mês, com payback de ${formatarPayback(r.paybackAnos, r.paybackAnosResto)}. Quero falar com um especialista.`,
   )
