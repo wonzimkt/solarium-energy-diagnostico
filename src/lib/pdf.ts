@@ -1,6 +1,6 @@
 import jsPDF from 'jspdf'
 import type { DiagnosticoResultado } from './calculations'
-import { formatarMoeda, formatarNumero, formatarPayback } from './calculations'
+import { formatarMoeda, formatarNumero, formatarPayback, formatarPercentual } from './calculations'
 import type { FormularioDados } from '../types'
 import { REGIME_LABEL } from './constants'
 
@@ -52,7 +52,10 @@ export function gerarPdfDiagnostico(dados: FormularioDados, r: DiagnosticoResult
   doc.setDrawColor(230, 230, 230)
   doc.line(14, y - 6, 196, y - 6)
 
-  linha('Economia mensal estimada', `${formatarMoeda(r.economiaMensal)}/mês`)
+  linha(
+    'Economia mensal estimada',
+    `${formatarMoeda(r.economiaMensal)}/mês (${formatarPercentual(r.percentualEconomia)} da conta atual)`,
+  )
   linha('Payback estimado', formatarPayback(r.paybackAnos, r.paybackAnosResto))
   linha('Investimento estimado do sistema', formatarMoeda(r.investimentoEstimado))
   linha(
@@ -60,6 +63,10 @@ export function gerarPdfDiagnostico(dados: FormularioDados, r: DiagnosticoResult
     `${formatarNumero(r.kwpInstalavel)} kWp · ${formatarNumero(r.energiaGeradaMensalKwh, 0)} kWh/mês`,
   )
   linha('Economia acumulada em 25 anos', formatarMoeda(r.economiaAcumulada25Anos))
+  linha(
+    'Se investida a uma taxa de referência do CDI em 25 anos',
+    formatarMoeda(r.economiaInvestidaCDI25Anos),
+  )
   linha('CO2 evitado por ano', `${formatarNumero(r.co2EvitadoTonAno, 2)} toneladas/ano`)
 
   doc.setDrawColor(230, 230, 230)

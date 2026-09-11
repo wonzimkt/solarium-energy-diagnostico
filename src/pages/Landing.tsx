@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import Hero from '../components/Hero'
 import HowItWorks from '../components/HowItWorks'
+import Logo from '../components/Logo'
 import LeadCapture from '../components/form/LeadCapture'
 import Qualification from '../components/form/Qualification'
 import NotIndustry from '../components/form/NotIndustry'
@@ -93,7 +94,11 @@ export default function Landing() {
       )}
 
       {estagio !== 'hero' && (
-        <main className="flex-1 px-6 py-16 sm:py-24">
+        <>
+          <header className="px-6 py-6 border-b border-white/5">
+            <Logo className="h-7 mx-auto max-w-xl sm:max-w-3xl" />
+          </header>
+          <main className="flex-1 px-6 py-16 sm:py-24">
           {estagio === 'lead_capture' && (
             <LeadCapture
               empresa={empresa}
@@ -164,7 +169,8 @@ export default function Landing() {
           {estagio === 'resultado' && resultado && dadosFinal && (
             <ResultDashboard dados={dadosFinal} r={resultado} />
           )}
-        </main>
+          </main>
+        </>
       )}
 
       {estagio === 'resultado' && (

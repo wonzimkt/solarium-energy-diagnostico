@@ -46,6 +46,11 @@ export const REAJUSTE_TARIFARIO_MEDIO_ANUAL = 0.08
 export const DEGRADACAO_ANUAL_PAINEL = 0.005
 export const VIDA_UTIL_SISTEMA_ANOS = 25
 
+// Taxa média de referência do CDI ao ano — usada apenas para ilustrar o potencial de rendimento
+// caso a economia mensal fosse investida em vez de gasta na conta de luz. Atualizar conforme a
+// taxa Selic/CDI vigente (validar antes do lançamento).
+export const TAXA_CDI_ANUAL_REFERENCIA = 0.105
+
 // Faixa de tarifa efetiva plausível (R$/kWh) para o alerta de sanity-check (seção 6.1)
 export const TARIFA_MIN_PLAUSIVEL = 0.45
 export const TARIFA_MAX_PLAUSIVEL = 1.2

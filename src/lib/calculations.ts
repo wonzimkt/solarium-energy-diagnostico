@@ -10,6 +10,7 @@ import {
   REAJUSTE_TARIFARIO_MEDIO_ANUAL,
   TARIFA_MAX_PLAUSIVEL,
   TARIFA_MIN_PLAUSIVEL,
+  TAXA_CDI_ANUAL_REFERENCIA,
   VIDA_UTIL_SISTEMA_ANOS,
   type Regiao,
   type Regime,
@@ -37,12 +38,14 @@ export interface DiagnosticoResultado {
   energiaInjetadaKwh: number
   tarifaLiquidaEnergiaInjetada: number
   economiaMensal: number
+  percentualEconomia: number
   investimentoEstimado: number
   paybackMeses: number
   paybackAnos: number
   paybackAnosResto: number
   economiaAcumulada25Anos: number
   economiaAcumulada25AnosAvancada: number
+  economiaInvestidaCDI25Anos: number
   co2EvitadoTonAno: number
 }
 
@@ -85,6 +88,8 @@ export function calcularDiagnostico(input: DiagnosticoInput): DiagnosticoResulta
   const economiaMensal =
     energiaAutoconsumidaKwh * tarifaEfetiva + energiaInjetadaKwh * tarifaLiquidaEnergiaInjetada
 
+  const percentualEconomia = economiaMensal / valorMedioConta
+
   // 6.5 — investimento estimado
   const investimentoEstimado = kwpInstalavel * custoPorKwp(kwpInstalavel)
 
@@ -104,6 +109,13 @@ export function calcularDiagnostico(input: DiagnosticoInput): DiagnosticoResulta
     economiaAnoBase *= 1 + REAJUSTE_TARIFARIO_MEDIO_ANUAL
   }
 
+  // Comparativo ilustrativo: quanto renderia a mesma economia mensal se fosse investida
+  // todo mês a uma taxa de referência do CDI, em vez de somada de forma simples (seção 6.7 avançada)
+  const iMensalCdi = Math.pow(1 + TAXA_CDI_ANUAL_REFERENCIA, 1 / 12) - 1
+  const nMeses = VIDA_UTIL_SISTEMA_ANOS * 12
+  const economiaInvestidaCDI25Anos =
+    economiaMensal * ((Math.pow(1 + iMensalCdi, nMeses) - 1) / iMensalCdi)
+
   // 6.8 — impacto ambiental
   const co2EvitadoTonAno =
     ((energiaGeradaMensalKwh * 12) / 1000) * FATOR_EMISSAO_CO2_TON_MWH
@@ -122,12 +134,14 @@ export function calcularDiagnostico(input: DiagnosticoInput): DiagnosticoResulta
     energiaInjetadaKwh,
     tarifaLiquidaEnergiaInjetada,
     economiaMensal,
+    percentualEconomia,
     investimentoEstimado,
     paybackMeses,
     paybackAnos,
     paybackAnosResto,
     economiaAcumulada25Anos,
     economiaAcumulada25AnosAvancada,
+    economiaInvestidaCDI25Anos,
     co2EvitadoTonAno,
   }
 }
@@ -142,6 +156,14 @@ export function formatarMoeda(valor: number): string {
 
 export function formatarNumero(valor: number, casas = 1): string {
   return valor.toLocaleString('pt-BR', {
+    minimumFractionDigits: casas,
+    maximumFractionDigits: casas,
+  })
+}
+
+export function formatarPercentual(valor: number, casas = 0): string {
+  return valor.toLocaleString('pt-BR', {
+    style: 'percent',
     minimumFractionDigits: casas,
     maximumFractionDigits: casas,
   })

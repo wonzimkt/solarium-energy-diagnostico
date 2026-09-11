@@ -17,9 +17,12 @@ describe('calcularDiagnostico', () => {
     expect(r.limitadoPorArea).toBe(false)
     expect(r.energiaGeradaMensalKwh).toBeCloseTo(8000, 0)
     expect(r.economiaMensal).toBeCloseTo(6310.4, 1)
+    expect(r.percentualEconomia).toBeCloseTo(6310.4 / 6800, 4)
     expect(r.investimentoEstimado).toBeCloseTo(130909.09, 1)
     expect(r.paybackMeses).toBeCloseTo(20.745, 2)
     expect(r.economiaAcumulada25Anos).toBeCloseTo(1893120, 0)
+    // o comparativo de rendimento (juros compostos) deve superar a soma simples
+    expect(r.economiaInvestidaCDI25Anos).toBeGreaterThan(r.economiaAcumulada25Anos)
     expect(r.co2EvitadoTonAno).toBeCloseTo(4.8, 3)
   })
 
